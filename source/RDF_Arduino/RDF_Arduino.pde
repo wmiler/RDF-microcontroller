@@ -31,7 +31,7 @@ void setup() {
 // Setup pins, * means its task is set for this project
   pinMode(0, INPUT);   // Serial RX
   pinMode(1, INPUT);   // Serial TX
-  pinMode(2, INPUT);   // External Interrupt
+  pinMode(2, INPUT);   // MeasureDopplerFreq *
   pinMode(3, INPUT);   // PWM or External Interrupt
   pinMode(4, INPUT);   // RSSI *
   pinMode(5, INPUT);   // PWM
@@ -53,6 +53,13 @@ void setup() {
 void antennaPulseTrain(int speed) {
    antennaPT.setSpeed(speed);
    antennaPT.step(stepsPerRevolution);
+}
+
+// Measure what frequency our Doppler tone is
+long measureDopplerFreq() {
+  long freq = 0;
+  for(int i=0; i<4096; i++) freq+= 500000/pulseIn(2, HIGH, 250000);
+  return freq / 4096;
 }
 
 // Connect digitalPin to RSSI output from receiver, scan for logic LOW, wait 200us for pulse
