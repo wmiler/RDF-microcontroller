@@ -10,7 +10,6 @@
  */
 
 // Globals
-  char dir[] = "";
   char bearing[] = "";
   char timestamp[] = "";
   char gpsfix[] = "";
@@ -74,8 +73,24 @@ int FoxBearing() {
 }
 
 // Turn a bearing into an APRS direction
-int APRSdirection() {
-  
+char* APRSdirection(int foxbearing) {
+  if (22 > foxbearing < 68) {
+    return "1"; // NE
+  } else if (69 > foxbearing < 113) { 
+    return "2"; // E
+  } else if (114 > foxbearing < 157) { 
+    return "3"; // SE
+  } else if (158 > foxbearing < 202) { 
+    return "4"; // S
+  } else if (203 > foxbearing < 247) { 
+    return "5"; // SW
+  } else if (248 > foxbearing < 292) { 
+    return "6"; // W
+  } else if (292 > foxbearing < 337) { 
+    return "7"; // NW
+  } else if (337 > foxbearing < 22) { 
+    return "8"; // N
+  }
 }
 
 // Connect pin 4 to RSSI output from receiver, scan for logic LOW, wait 200us for pulse
@@ -89,7 +104,12 @@ char* RSSIread() {
 
 char CreateAPRSMsg() {
   // Holds message to be sent to radio (DFS prefix, rssi, height, gain, dir, bearing, timestamp, gpsfix
-  char* APRSmsg[] = {"DFS", RSSIread(), "0", "3", dir, " ", bearing};
+  char* APRSmsg[] = {"DFS", RSSIread(), "0", "3", APRSdirection((int)bearing), " ", bearing};
+  
+}
+
+// Handoff to the TinyTraker4 to beacon message out
+void APRSbeacon(char* message) {
   
 }
 
