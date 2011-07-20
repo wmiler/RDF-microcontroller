@@ -16,8 +16,17 @@
   char timestamp[] = "";
   char gpsfix[] = "";
 
+#include <Stepper.h>
+
+const int stepsPerRevolution = 4;
+
+// initialize the stepper library on pins 7 and 8:
+Stepper antennaPT(stepsPerRevolution, 7, 8);            
+
+
 void setup() {
   Serial.begin(9600);
+  antennaPT.setSpeed(60); // 60 rpm, set higher later
   
 // Setup pins, * means its task is set for this project
   pinMode(0, INPUT);   // Serial RX
@@ -41,8 +50,9 @@ void setup() {
 
 // Setup the pulse train for turning the antennas on and off
 // Antenna control is via pins 7 & 8
-int antennaPulseTrain() {
-   
+void antennaPulseTrain(int speed) {
+   antennaPT.setSpeed(speed);
+   antennaPT.step(stepsPerRevolution);
 }
 
 // Connect digitalPin to RSSI output from receiver, scan for logic LOW, wait 200us for pulse
