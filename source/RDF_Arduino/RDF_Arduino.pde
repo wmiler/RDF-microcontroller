@@ -56,23 +56,26 @@ void antennaPulseTrain(int speed) {
 }
 
 // Connect digitalPin to RSSI output from receiver, scan for logic LOW, wait 200us for pulse
-int RSSIread () {
+char* RSSIread () {
   int digitalPin = 4;
   int rssiDur;
   
   rssiDur = pulseIn(digitalPin, LOW, 200); 
 
-  return rssiDur;
+  return (char*)rssiDur;
 }
 
 char CreateAPRSMsg() {
   // Holds message to be sent to radio (DFS prefix, rssi, height, gain, dir, bearing, timestamp, gpsfix
-  char* APRSmsg[] = {"DFS", rssi, "0", "3", dir, " ", bearing};
+//  char* APRSmsg[] = {"DFS", rssi, "0", "3", dir, " ", bearing};
+  char* APRSmsg[] = {"DFS", RSSIread (), "0", "3", dir, " ", bearing};
   
 }
 
 // Main loop
 void loop() {
+  
+  // Ignore below, just placeholders for now
   int sensorValue = digitalRead(4);
   Serial.println(sensorValue, DEC);
 }
