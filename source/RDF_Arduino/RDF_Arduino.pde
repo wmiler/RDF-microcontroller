@@ -22,17 +22,8 @@
 #define LONG 08215.53W //dddmm.mmW|E
 #define ALT 1076 // feet
 
-// #include <Stepper.h>
-
-// const int stepsPerRevolution = 4;
-
-// initialize the stepper library on pins 7 and 8:
-// Stepper antennaPT(stepsPerRevolution, 7, 8);            
-
-
 void setup() {
   Serial.begin(9600);
-//  antennaPT.setSpeed(30000); // 30,000 rpm initial
   
 // Setup pins, * means its task is set for this project
   pinMode(0, INPUT);   // Serial RX
@@ -98,16 +89,16 @@ void antennaPulseTrain(int speed) {
   } // end for
 }
 
-// void antennaPulseTrain(int speed) {
-//   antennaPT.setSpeed(speed);
-//   antennaPT.step(stepsPerRevolution);
-// }
-
 // Measure what frequency our Doppler tone is at (pin 2)
 long measureDopplerFreq() {
   long freq = 0;
   for(int i=0; i<4096; i++) freq+= 500000/pulseIn(2, HIGH, 250000);
   return freq / 4096;
+}
+
+//Find the zero crossing point
+int zeroCross() {
+  
 }
 
 // Find bearing to fox
