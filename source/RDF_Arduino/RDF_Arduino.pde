@@ -14,17 +14,17 @@
   char timestamp[] = "";
   char gpsfix[] = "";
 
-#include <Stepper.h>
+// #include <Stepper.h>
 
-const int stepsPerRevolution = 4;
+// const int stepsPerRevolution = 4;
 
 // initialize the stepper library on pins 7 and 8:
-Stepper antennaPT(stepsPerRevolution, 7, 8);            
+// Stepper antennaPT(stepsPerRevolution, 7, 8);            
 
 
 void setup() {
   Serial.begin(9600);
-  antennaPT.setSpeed(30000); // 30,000 rpm initial
+//  antennaPT.setSpeed(30000); // 30,000 rpm initial
   
 // Setup pins, * means its task is set for this project
   pinMode(0, INPUT);   // Serial RX
@@ -32,11 +32,11 @@ void setup() {
   pinMode(2, INPUT);   // MeasureDopplerFreq *
   pinMode(3, INPUT);   // PWM or External Interrupt
   pinMode(4, INPUT);   // RSSI *
-  pinMode(5, INPUT);   // PWM
+  pinMode(5, OUTPUT);  // PulseTrain1 *
   pinMode(6, INPUT);   // PWM
-  pinMode(7, OUTPUT);  // PulseTrain1 *
-  pinMode(8, OUTPUT);  // PulseTrain2 *
-  pinMode(9, INPUT);   // PWM
+  pinMode(7, OUTPUT);  // PulseTrain2 *
+  pinMode(8, OUTPUT);  // PulseTrain3 *
+  pinMode(9, INPUT);   // PulseTrain4 *
   pinMode(10, INPUT);  // PWM or SPI (SS)
   pinMode(11, INPUT);  // PWM or SPI (MOSI)
   pinMode(12, INPUT);  // SPI (MISO)
@@ -46,18 +46,54 @@ void setup() {
 
 }
 
-// Setup the pulse train for turning the antennas on and off
-// Antenna control is via pins 7 & 8 see logic table
-// Step  7   8
-//    1  0   1
-//    2  1   1
-//    3  1   0
-//    4  0   0
+// Forgot that only one antenna can be on at at time.
+
+// Step  5  7  8  9
+//    1  1  0  0  0
+//    2  0  1  0  0
+//    3  0  0  1  0
+//    4  0  0  0  1
 
 void antennaPulseTrain(int speed) {
-   antennaPT.setSpeed(speed);
-   antennaPT.step(stepsPerRevolution);
+   int i=1;
+   int h=HIGH;
+   int j=LOW;
+ 
+   for(i=1; i<5; i++) {
+     delayMicroseconds(speed); // Set our wait speed here in us
+     if (i=1) {
+       digitalWrite(5, HIGH); // Antenna 1 on
+       digitalWrite(7, LOW);
+       digitalWrite(8, LOW);
+       digitalWrite(9, LOW);
+     } else if (i=2) {
+       digitalWrite(7, HIGH); // Antenna 2 on
+       digitalWrite(5, LOW);
+       digitalWrite(8, LOW);
+       digitalWrite(9, LOW);
+     } else if (i=3) {
+       digitalWrite(8, HIGH); // Antenna 3 on
+       digitalWrite(5, LOW);
+       digitalWrite(7, LOW);
+       digitalWrite(9, LOW);
+     } else if (i=4) {
+       digitalWrite(9, HIGH); // Antenna 4 on
+       digitalWrite(5, LOW);
+       digitalWrite(7, LOW);
+       digitalWrite(8, LOW);
+     } else {
+       digitalWrite(5, LOW); // All antennas off
+       digitalWrite(7, LOW);
+       digitalWrite(8, LOW);
+       digitalWrite(9, LOW);
+   } // end if
+  } // end for
 }
+
+// void antennaPulseTrain(int speed) {
+//   antennaPT.setSpeed(speed);
+//   antennaPT.step(stepsPerRevolution);
+// }
 
 // Measure what frequency our Doppler tone is on pin 2
 long measureDopplerFreq() {
@@ -91,6 +127,11 @@ char* APRSdirection(int foxbearing) {
   } else if (337 > foxbearing < 22) { 
     return "8"; // N
   }
+}
+
+// GPS fix, heading, timestamp
+void GPSread() {
+  
 }
 
 // Connect pin 4 to RSSI output from receiver, scan for logic LOW, wait 200us for pulse
