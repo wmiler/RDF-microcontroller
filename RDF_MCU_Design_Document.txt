@@ -3,7 +3,7 @@
 					Overview
 
 This program replaces the solid state control of the Ramsey/WA2EBY DDF1 radio direction finder with a 
-micro-controller (uC).  Below is the uC flowchart that needs to be implemented in order to replace most 
+micro-controller (uC).  Current thought is to base to base the uC on the Arduino Uno board.  Below is the uC flowchart that needs to be implemented in order to replace most 
 aspects of the solid state functions, plus give additional capabilities.  The intention is to allow 
 multiple DDF units to be permanently mounted at certain locations, ability to have remote turn on and 
 communicate the signal strength and bearing to the unknown transmitter (fox).  This will be implemented 
