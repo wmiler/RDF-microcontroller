@@ -9,7 +9,7 @@
   
  */
 
-// Globals
+// Globals/placeholders
   char bearing[] = "";
   char timestamp[] = "";
   char gpsfix[] = "";
@@ -18,9 +18,9 @@
 #define FIXEDGPS 1
 
 // This stations lat/long/altitude
-#define LAT 3503.66N //dddmm.mmN|S
-#define LONG 08215.53W //dddmm.mmW|E
-#define ALT 1076 // feet
+#define LAT "3503.66N" //dddmm.mmN|S
+#define LONG "08215.53W" //dddmm.mmW|E
+#define ALT "1076" // feet
 
 void setup() {
   Serial.begin(9600);
@@ -144,7 +144,7 @@ char* RSSIread() {
 
 char CreateAPRSMsg() {
   // Holds message to be sent to radio (DFS prefix, rssi, height, gain, dir, bearing, timestamp, gpsfix
-  char* APRSmsg[] = {"DFS", RSSIread(), "0", "3", APRSdirection((int)bearing), " ", bearing};
+  char* APRSmsg[] = {"!", LAT, "/", LONG, "\\", " DFS", RSSIread(), "0", "3", APRSdirection((int)bearing), " ", bearing, "\r\n"};
   
 }
 
